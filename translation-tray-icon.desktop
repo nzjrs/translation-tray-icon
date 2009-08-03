@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=Translation Tray Icon
+Comment=Translate Selected Text
+Icon=translation-tray-icon
+Exec=translation-tray-icon.py
+Categories=GNOME;GTK;Education;
+
