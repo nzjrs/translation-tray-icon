@@ -1,0 +1,11 @@
+translation-tray-icon (0.1-1ubuntu1) jaunty; urgency=low
+
+  * Rebuild
+
+ -- John Stowers <john.stowers@gmail.com>  Mon, 03 Aug 2009 17:57:03 +1200
+
+translation-tray-icon (0.1-1ubuntu0) jaunty; urgency=low
+
+  * Initial release
+
+ -- John Stowers <john.stowers@gmail.com>  Sat, 01 Aug 2009 19:03:53 +1200

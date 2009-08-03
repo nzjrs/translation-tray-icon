@@ -1,0 +1,15 @@
+Source: translation-tray-icon
+Section: net
+XS-Python-Version: all
+Priority: optional
+Maintainer: John Stowers <john.stowers@gmail.com>
+Build-Depends: debhelper, python, cdbs
+Build-Depends-Indep: python-central
+Standards-Version: 3.8.0
+Homepage: http://www.github.com/~nzjrs
+
+Package: translation-tray-icon
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, python-gobject, python-gtk2, python-notify, python-dbus, python-simplejson
+XB-Python-Version: ${python:Versions}
+Description: PyGtk+ Translation Helper - Translates Selected Text
