@@ -11,7 +11,7 @@ setup(
     url="http://www.github.com/~nzjrs",
     license="GPL v2",
     scripts=["translation-tray-icon.py"],
-    py_modules=["libtranstray"],
+    packages=["libtranstray"],
     data_files=[
         ('share/applications', ['translation-tray-icon.desktop']),
         ('share/pixmaps', ['translation-tray-icon.svg'])],
