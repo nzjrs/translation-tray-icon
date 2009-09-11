@@ -137,16 +137,17 @@ class TrayIcon(gtk.StatusIcon):
 
     def _on_prefs_clicked(self, widget):
         def make_cb_label(store, label):
-            hb = gtk.HBox()
+            hb = gtk.HBox(spacing=5)
             lbl = gtk.Label(label)
-            hb.pack_start(lbl)
+            lbl.props.xalign = 0.0
+            hb.pack_start(lbl, expand=False)
 
             cb = gtk.ComboBox(store)
             cell = gtk.CellRendererText()
             cb.pack_start(cell, True)
             cb.add_attribute(cell, 'text', 0)
 
-            hb.pack_start(cb)
+            hb.pack_start(cb, expand=True)
             return hb, cb, lbl
 
         def select_cb(cb, langcode):
@@ -167,14 +168,21 @@ class TrayIcon(gtk.StatusIcon):
         for name,code in gtrans.langs.items():
             s.append( (name, code) )
 
-        dlg = gtk.Dialog()
+        dlg = gtk.Dialog(title="Preferences")
         dlg.add_button(gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
+        dlg.vbox.props.spacing = 5
+        dlg.props.default_width = 200
 
-        frm, frmcb, frmlbl = make_cb_label(s, "from")
+        lbl = gtk.Label("<b>Translate Selected Text</b>")
+        lbl.props.xalign = 0.0
+        lbl.props.use_markup = True
+        dlg.vbox.pack_start(lbl)
+
+        frm, frmcb, frmlbl = make_cb_label(s, "From")
         select_cb(frmcb, self._langfrom)
         dlg.vbox.pack_start(frm)
 
-        to, tocb, tolbl = make_cb_label(s, "to")
+        to, tocb, tolbl = make_cb_label(s, "To")
         select_cb(tocb, self._langto)
         dlg.vbox.pack_start(to)
 
