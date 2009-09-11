@@ -75,8 +75,11 @@ class TrayIcon(gtk.StatusIcon):
     APP_DESCRIPTION = "Translate Stuff"
     APP_ICON = "translation-tray-icon"
 
-    def __init__(self):
+    def __init__(self, languagefrom="de", languageto="en"):
         gtk.StatusIcon.__init__(self)
+
+        self._langfrom = languagefrom
+        self._langto = languageto
 
         if libtranstray.is_installed():
             self.set_from_icon_name(self.APP_ICON)
@@ -125,7 +128,7 @@ class TrayIcon(gtk.StatusIcon):
 
     def _clipboard_text_received(self, clip, text, user_data):
         if text:
-            t = TranslateThread(self._translation_finished,"en", "de", text)
+            t = TranslateThread(self._translation_finished, self._langfrom, self._langto, text)
             t.start()
 
     def _on_about_clicked(self, widget):
