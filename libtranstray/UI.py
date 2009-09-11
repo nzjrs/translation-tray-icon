@@ -102,10 +102,14 @@ class TrayIcon(gtk.StatusIcon):
 
     def _create_right_menu(self):
         self._rmenu = gtk.Menu()
+        prefs = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+        prefs.connect("activate", self._on_prefs_clicked)
         about = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
         about.connect("activate", self._on_about_clicked)
         quit = gtk.ImageMenuItem(stock_id=gtk.STOCK_QUIT)
         quit.connect("activate", self._on_exit_clicked)
+        self._rmenu.add(prefs)
+        self._rmenu.add(gtk.SeparatorMenuItem())
         self._rmenu.add(about)
         self._rmenu.add(quit)
         self._rmenu.show_all()
@@ -130,6 +134,67 @@ class TrayIcon(gtk.StatusIcon):
         if text:
             t = TranslateThread(self._translation_finished, self._langfrom, self._langto, text)
             t.start()
+
+    def _on_prefs_clicked(self, widget):
+        def make_cb_label(store, label):
+            hb = gtk.HBox()
+            lbl = gtk.Label(label)
+            hb.pack_start(lbl)
+
+            cb = gtk.ComboBox(store)
+            cell = gtk.CellRendererText()
+            cb.pack_start(cell, True)
+            cb.add_attribute(cell, 'text', 0)
+
+            hb.pack_start(cb)
+            return hb, cb, lbl
+
+        def select_cb(cb, langcode):
+            model = cb.get_model()
+            selected = None
+
+            iter_ = model.get_iter_root()
+            while iter_:
+                if model.get_value(iter_, 1) == langcode:
+                    selected = iter_
+                    break
+                iter_ = model.iter_next(iter_)
+
+            if selected:
+                cb.set_active_iter(selected)
+
+        s = gtk.ListStore( str, str )
+        for name,code in gtrans.langs.items():
+            s.append( (name, code) )
+
+        dlg = gtk.Dialog()
+        dlg.add_button(gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
+
+        frm, frmcb, frmlbl = make_cb_label(s, "from")
+        select_cb(frmcb, self._langfrom)
+        dlg.vbox.pack_start(frm)
+
+        to, tocb, tolbl = make_cb_label(s, "to")
+        select_cb(tocb, self._langto)
+        dlg.vbox.pack_start(to)
+
+        sg = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        sg.add_widget(frmlbl)
+        sg.add_widget(tolbl)
+
+        dlg.show_all()
+        resp = dlg.run()
+
+        if resp == gtk.RESPONSE_APPLY:
+            self._langfrom = s.get_value(
+                            frmcb.get_active_iter(),
+                            1)
+            self._langto = s.get_value(
+                            tocb.get_active_iter(),
+                            1)
+
+        dlg.destroy()
+                
 
     def _on_about_clicked(self, widget):
         dlg = gtk.AboutDialog()
